@@ -2,14 +2,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.util.HashMap;
-import java.awt.image.BufferedImage;
-
-import java.io.*;
-import javax.imageio.*;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
 
 public class user extends JFrame implements ActionListener {
 
@@ -31,6 +25,16 @@ public class user extends JFrame implements ActionListener {
     JPanel mainPanel = new JPanel();
 
     JPanel paymentPanel = new JPanel();
+
+    JButton register = new JButton("new User");
+
+    JLabel email= new JLabel("Email");
+    JTextField emailTextField= new JTextField(20);
+    JLabel password = new JLabel("Password");
+    JPasswordField  registerPasswordField = new JPasswordField(20);
+    JLabel passwordConform = new JLabel("Conform Password");
+    JPasswordField  ConformPasswordField = new JPasswordField(20);
+    JButton registerButton = new JButton("Register");
     public user() {
 
         setTitle("Pizza Shop");
@@ -63,6 +67,11 @@ public class user extends JFrame implements ActionListener {
         gbc.gridx = 1;
         gbc.gridy = 2;
         login.add(loginButton, gbc);
+
+        register.addActionListener(this);
+        gbc.gridx = 1;
+        gbc.gridy = 5;
+        login.add(register, gbc);
 
         add(login);
 
@@ -97,6 +106,14 @@ public class user extends JFrame implements ActionListener {
             paymentPanel.add(price,gbc);
             add(paymentPanel);
             setVisible(true);
+        } else if (e.getSource().equals(register)) {
+            newUser();
+        } else if (e.getSource().equals(registerButton)) {
+            if(registerPasswordField.getText().equalsIgnoreCase(ConformPasswordField.getText())){
+
+            }else{
+
+            }
         }
     }
 
@@ -166,6 +183,43 @@ public class user extends JFrame implements ActionListener {
         gbc.gridy = 0;
         mainPanel.add(username,gbc);
         add(mainPanel);
+
+        setVisible(true);
+    }
+
+    public void newUser(){
+        remove(login);
+        registerButton.addActionListener(this);
+        JPanel registerPanel = new JPanel();
+        registerPanel.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(5, 5, 5, 5);
+
+
+        gbc.gridx=0;
+        gbc.gridy=0;
+        registerPanel.add(email,gbc);
+        gbc.gridx=1;
+        gbc.gridy=0;
+        registerPanel.add(emailTextField,gbc);
+        gbc.gridx=0;
+        gbc.gridy=1;
+        registerPanel.add(password,gbc);
+        gbc.gridx=1;
+        gbc.gridy=1;
+        registerPanel.add(registerPasswordField,gbc);
+        gbc.gridx=0;
+        gbc.gridy=2;
+        registerPanel.add(passwordConform,gbc);
+
+        gbc.gridx=1;
+        gbc.gridy=2;
+        registerPanel.add(ConformPasswordField,gbc);
+
+        gbc.gridx=1;
+        gbc.gridy=3;
+        registerPanel.add(registerButton,gbc);
+        add(registerPanel);
 
         setVisible(true);
     }
