@@ -4,6 +4,10 @@
   <groupId>org.example</groupId>
   <artifactId>PizzaShop-Client</artifactId>
   <packaging>war</packaging>
+  <properties>
+    <maven.compiler.source>19</maven.compiler.source>
+    <maven.compiler.target>19</maven.compiler.target>
+  </properties>
   <version>1.0-SNAPSHOT</version>
   <name>PizzaShop-Client Maven Webapp</name>
   <url>http://maven.apache.org</url>
