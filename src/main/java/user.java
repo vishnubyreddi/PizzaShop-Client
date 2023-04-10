@@ -35,8 +35,15 @@ public class user extends JFrame implements ActionListener {
     JLabel passwordConform = new JLabel("Conform Password");
     JPasswordField  ConformPasswordField = new JPasswordField(20);
     JButton registerButton = new JButton("Register");
-    public user() {
 
+    JButton backFromRegister = new JButton("back");
+
+    JPanel registerPanel = new JPanel();
+    public user() {
+        login();
+    }
+
+    public void login(){
         setTitle("Pizza Shop");
         setSize(400, 300);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -77,7 +84,6 @@ public class user extends JFrame implements ActionListener {
 
         setVisible(true);
     }
-
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource().equals(loginButton)) {
@@ -114,6 +120,9 @@ public class user extends JFrame implements ActionListener {
             }else{
 
             }
+        } else if (e.getSource().equals(backFromRegister)) {
+            remove(registerPanel);
+            login();
         }
     }
 
@@ -190,7 +199,6 @@ public class user extends JFrame implements ActionListener {
     public void newUser(){
         remove(login);
         registerButton.addActionListener(this);
-        JPanel registerPanel = new JPanel();
         registerPanel.setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
@@ -219,8 +227,14 @@ public class user extends JFrame implements ActionListener {
         gbc.gridx=1;
         gbc.gridy=3;
         registerPanel.add(registerButton,gbc);
-        add(registerPanel);
 
+        backFromRegister.addActionListener(this);
+
+        gbc.gridx=1;
+        gbc.gridy=6;
+        registerPanel.add(backFromRegister,gbc);
+
+        add(registerPanel);
         setVisible(true);
     }
 }
