@@ -1,3 +1,5 @@
+package panels;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -38,7 +40,20 @@ public class user extends JFrame implements ActionListener {
 
     JButton backFromRegister = new JButton("back");
 
+    JLabel toppingsLabel = new JLabel("Toppings:");
+    JCheckBox pepperoniCheckBox = new JCheckBox("Pepperoni");
+    JCheckBox mushroomCheckBox = new JCheckBox("Mushroom");
+    JCheckBox onionCheckBox = new JCheckBox("Onion");
+
+    JLabel sizeLabel = new JLabel("Size:");
+    JRadioButton smallRadioButton = new JRadioButton("Small");
+    JRadioButton mediumRadioButton = new JRadioButton("Medium");
+    JRadioButton largeRadioButton = new JRadioButton("Large");
+
     JPanel registerPanel = new JPanel();
+
+    JLabel quantityLabel = new JLabel("Quantity:");
+    JTextField quantityTextField = new JTextField("1", 5);
     public user() {
         login();
     }
@@ -104,14 +119,28 @@ public class user extends JFrame implements ActionListener {
             paymentPanel.setLayout(new GridBagLayout());
             GridBagConstraints gbc = new GridBagConstraints();
             gbc.insets = new Insets(5, 5, 5, 5);
+            int price =100;
+            if(mushroomCheckBox.isSelected()){
+                price = price + 50;
+            }
+            if(onionCheckBox.isSelected()){
+                price = price + 30;
+            }
+            if(pepperoniCheckBox.isSelected()){
+                price = price + 60;
+            }
+            if(mediumRadioButton.isSelected()){
+                price = price+50;
+            } else if (largeRadioButton.isSelected()) {
+                price = price +70;
+            }
+            int quant = Integer.parseInt(quantityTextField.getText());
+            price = price * quant;
+            setVisible(false);
+            /*PaymentOptionsPanel paymentOptionsPanel = new PaymentOptionsPanel();
+            paymentOptionsPanel.PaymentOptions(price);*/
+            addressPanel addressPanel = new addressPanel();
 
-
-            JLabel price= new JLabel("price");
-            gbc.gridx=0;
-            gbc.gridy=0;
-            paymentPanel.add(price,gbc);
-            add(paymentPanel);
-            setVisible(true);
         } else if (e.getSource().equals(register)) {
             newUser();
         } else if (e.getSource().equals(registerButton)) {
@@ -125,6 +154,7 @@ public class user extends JFrame implements ActionListener {
             login();
         }
     }
+
 
     public void loginSuccessful() throws IOException {
         remove(login);
@@ -144,8 +174,7 @@ public class user extends JFrame implements ActionListener {
         sizeButtonGroup.add(mediumRadioButton);
         sizeButtonGroup.add(largeRadioButton);
 
-        JLabel quantityLabel = new JLabel("Quantity:");
-        JTextField quantityTextField = new JTextField("1", 5);
+
 
         orderButton.addActionListener(this);
 
