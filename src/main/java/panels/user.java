@@ -1,5 +1,7 @@
 package panels;
 
+import Images.customerDetails;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -59,11 +61,11 @@ public class user extends JFrame implements ActionListener {
     }
 
     public void login(){
-        setTitle("Pizza Shop");
+        customerDetails customerDetails = new customerDetails();
+        setTitle(customerDetails.getCustomerName());
         setSize(400, 300);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        Image logo = Toolkit.getDefaultToolkit().getImage("C:\\Users\\91799\\Downloads\\dominos.png");
-        setIconImage(logo);
+        setIconImage(customerDetails.getLogo());
 
         login.setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
@@ -111,6 +113,8 @@ public class user extends JFrame implements ActionListener {
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
                 }
+            }else{
+                JOptionPane.showMessageDialog(this, "Login failed.");
             }
         }else if(e.getSource().equals(orderButton)){
             remove(mainPanel);
@@ -137,9 +141,7 @@ public class user extends JFrame implements ActionListener {
             int quant = Integer.parseInt(quantityTextField.getText());
             price = price * quant;
             setVisible(false);
-            /*PaymentOptionsPanel paymentOptionsPanel = new PaymentOptionsPanel();
-            paymentOptionsPanel.PaymentOptions(price);*/
-            addressPanel addressPanel = new addressPanel();
+            new addressPanel(price,usernameTextField.getText());
 
         } else if (e.getSource().equals(register)) {
             newUser();

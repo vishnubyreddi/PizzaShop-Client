@@ -1,5 +1,8 @@
 package panels;
 
+import DTO.addressDTO;
+import Images.customerDetails;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -19,9 +22,17 @@ public class addressPanel extends JFrame implements ActionListener {
 
     private JButton saveButton;
 
-    public addressPanel() {
-        setTitle("Delivery Address");
-        setSize(400, 250);
+    private int price;
+
+    private String userId;
+    public addressPanel(int price,String userId) {
+        customerDetails customerDetails = new customerDetails();
+        this.price = price;
+        this.userId = userId;
+        setTitle(customerDetails.getCustomerName());
+        setSize(400, 300);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setIconImage(customerDetails.getLogo());
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         JPanel panel = new JPanel(new GridLayout(6, 2));
@@ -59,11 +70,14 @@ public class addressPanel extends JFrame implements ActionListener {
     }
 
     private void saveAddress() {
-        String name = nameTextField.getText();
-        String address = addressTextField.getText();
-        String city = cityTextField.getText();
-        String state = stateTextField.getText();
-        String zip = zipTextField.getText();
+        DTO.addressDTO addressDTO = new addressDTO();
+
+        addressDTO.setUserId(userId);
+        addressDTO.setName(nameTextField.getText());
+        addressDTO.setAddress(addressTextField.getText());
+        addressDTO.setCity(cityTextField.getText());
+        addressDTO.setState(stateTextField.getText());
+        addressDTO.setZip(zipTextField.getText());
 
         // Do something with the address data, such as save it to a database or use it to calculate shipping costs.
 
@@ -76,7 +90,7 @@ public class addressPanel extends JFrame implements ActionListener {
             saveAddress();
             setVisible(false);
             PaymentOptionsPanel paymentOptionsPanel = new PaymentOptionsPanel();
-            paymentOptionsPanel.PaymentOptions(100);
+            paymentOptionsPanel.PaymentOptions(price);
         }
     }
 }

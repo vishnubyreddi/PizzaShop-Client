@@ -1,5 +1,7 @@
 package panels;
 
+import Images.customerDetails;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -13,11 +15,12 @@ public class PaymentOptionsPanel extends JFrame implements ActionListener {
     private JButton ok = new JButton("ok");
 
     public void PaymentOptions(int price){
-        setTitle("Pizza Shop");
+        customerDetails customerDetails = new customerDetails();
+        setTitle(customerDetails.getCustomerName());
         setSize(400, 300);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        Image logo = Toolkit.getDefaultToolkit().getImage("C:\\Users\\91799\\Downloads\\dominos.png");
-        setIconImage(logo);
+
+        setIconImage(customerDetails.getLogo());
         paymentPanel.setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
