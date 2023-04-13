@@ -9,5 +9,5 @@ import java.awt.*;
 public class customerDetails {
     Image logo = Toolkit.getDefaultToolkit().getImage("C:\\Users\\91799\\Downloads\\dominos.png");
 
-    private String customerName = "DOMINOS";
+    private String customerName = "DOMINO'S";
 }

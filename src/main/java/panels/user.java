@@ -56,6 +56,9 @@ public class user extends JFrame implements ActionListener {
 
     JLabel quantityLabel = new JLabel("Quantity:");
     JTextField quantityTextField = new JTextField("1", 5);
+
+    String[] deliveryOptions = {"DINE IN","DELIVERY"};
+    JComboBox<String> typeOfDelivery = new JComboBox<>(deliveryOptions);
     public user() {
         login();
     }

@@ -6,15 +6,21 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Random;
 
 public class PaymentOptionsPanel extends JFrame implements ActionListener {
     private JPanel paymentPanel = new JPanel();
     private JRadioButton creditCardRadioButton;
     private JRadioButton paypalRadioButton;
     private JRadioButton bitcoinRadioButton;
+
+    private JRadioButton codButton;
     private JButton ok = new JButton("ok");
 
-    public void PaymentOptions(int price){
+    String userId = "";
+
+    public void PaymentOptions(int price,String userId){
+        this.userId = userId;
         customerDetails customerDetails = new customerDetails();
         setTitle(customerDetails.getCustomerName());
         setSize(400, 300);
@@ -28,11 +34,14 @@ public class PaymentOptionsPanel extends JFrame implements ActionListener {
         creditCardRadioButton = new JRadioButton("Credit Card");
         paypalRadioButton = new JRadioButton("PayPal");
         bitcoinRadioButton = new JRadioButton("Bitcoin");
+        codButton = new JRadioButton("COD");
+
 
         ButtonGroup buttonGroup = new ButtonGroup();
         buttonGroup.add(creditCardRadioButton);
         buttonGroup.add(paypalRadioButton);
         buttonGroup.add(bitcoinRadioButton);
+        buttonGroup.add(codButton);
 
         gbc.gridx=1;
         gbc.gridy=0;
@@ -49,6 +58,7 @@ public class PaymentOptionsPanel extends JFrame implements ActionListener {
 
         gbc.gridx=1;
         gbc.gridy=2;
+        ok.addActionListener(this);
         paymentPanel.add(ok,gbc);
 
         add(paymentPanel);
@@ -69,6 +79,12 @@ public class PaymentOptionsPanel extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-
+        if(e.getSource().equals(ok)){
+            Random random = new Random();
+            int randomNumber = random.nextInt(1000);
+            JOptionPane.showMessageDialog(this, "Your token number is : "+ randomNumber);
+            setVisible(false);
+            new thankYou(userId);
+        }
     }
 }

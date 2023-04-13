@@ -1,7 +1,7 @@
 package panels;
 
-import DTO.addressDTO;
 import Images.customerDetails;
+import delegates.delegate;
 
 import javax.swing.*;
 import java.awt.*;
@@ -70,14 +70,8 @@ public class addressPanel extends JFrame implements ActionListener {
     }
 
     private void saveAddress() {
-        DTO.addressDTO addressDTO = new addressDTO();
-
-        addressDTO.setUserId(userId);
-        addressDTO.setName(nameTextField.getText());
-        addressDTO.setAddress(addressTextField.getText());
-        addressDTO.setCity(cityTextField.getText());
-        addressDTO.setState(stateTextField.getText());
-        addressDTO.setZip(zipTextField.getText());
+        delegates.delegate delegate = new delegate();
+        delegate.restCallToServer("/test");
 
         // Do something with the address data, such as save it to a database or use it to calculate shipping costs.
 
@@ -90,7 +84,7 @@ public class addressPanel extends JFrame implements ActionListener {
             saveAddress();
             setVisible(false);
             PaymentOptionsPanel paymentOptionsPanel = new PaymentOptionsPanel();
-            paymentOptionsPanel.PaymentOptions(price);
+            paymentOptionsPanel.PaymentOptions(price,userId);
         }
     }
 }
