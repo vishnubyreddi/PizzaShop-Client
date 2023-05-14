@@ -7,6 +7,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.HashMap;
 
 public class addressPanel extends JFrame implements ActionListener {
     private JLabel nameLabel;
@@ -25,7 +26,15 @@ public class addressPanel extends JFrame implements ActionListener {
     private int price;
 
     private String userId;
+
+    delegate delegate = new delegate();
+    String userName;
+
+
+
     public addressPanel(int price,String userId) {
+        this.userName = userId;
+        HashMap<String, String> addressMap = (HashMap<String, String>) delegate.restCallToServer("/address",userName);
         customerDetails customerDetails = new customerDetails();
         this.price = price;
         this.userId = userId;
@@ -36,18 +45,18 @@ public class addressPanel extends JFrame implements ActionListener {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         JPanel panel = new JPanel(new GridLayout(6, 2));
-
-        nameLabel = new JLabel("Name:");
-        nameTextField = new JTextField(20);
-        addressLabel = new JLabel("Address:");
-        addressTextField = new JTextField(20);
-        cityLabel = new JLabel("City:");
-        cityTextField = new JTextField(20);
-        stateLabel = new JLabel("State:");
-        stateTextField = new JTextField(20);
-        zipLabel = new JLabel("Zip Code:");
-        zipTextField = new JTextField(20);
-
+        if(addressMap.containsKey("Name")) {
+            nameLabel = new JLabel("Name:");
+            nameTextField = new JTextField(addressMap.get("Name"));
+            addressLabel = new JLabel("Address:");
+            addressTextField = new JTextField(addressMap.get("Address"));
+            cityLabel = new JLabel("City:");
+            cityTextField = new JTextField(addressMap.get("City"));
+            stateLabel = new JLabel("State:");
+            stateTextField = new JTextField(addressMap.get("State"));
+            zipLabel = new JLabel("Zip Code:");
+            zipTextField = new JTextField(addressMap.get("Zip"));
+        }
         panel.add(nameLabel);
         panel.add(nameTextField);
         panel.add(addressLabel);
@@ -71,7 +80,7 @@ public class addressPanel extends JFrame implements ActionListener {
 
     private void saveAddress() {
         delegates.delegate delegate = new delegate();
-        delegate.restCallToServer("/test");
+     //   delegate.restCallToServer("/test",userName);
 
         // Do something with the address data, such as save it to a database or use it to calculate shipping costs.
 

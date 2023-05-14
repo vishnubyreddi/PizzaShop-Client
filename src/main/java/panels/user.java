@@ -1,6 +1,13 @@
 package panels;
 
+import Encryption.PasswordEncryption;
 import Images.customerDetails;
+import com.fasterxml.jackson.annotation.JsonAnyGetter;
+import delegates.FeignDelegate;
+import delegates.delegate;
+import lombok.Getter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,7 +16,11 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.HashMap;
 
+@Getter
 public class user extends JFrame implements ActionListener {
+
+    @Autowired
+    private FeignDelegate feignDelegate;
 
     JPanel login = new JPanel();
 
@@ -21,7 +32,7 @@ public class user extends JFrame implements ActionListener {
     JLabel usernameLabel = new JLabel("Username:");
     JLabel passwordLabel = new JLabel("Password:");
     private JTextField usernameTextField;
-    private JPasswordField passwordField;
+    private JPasswordField passwordField = new JPasswordField(20);
 
     JButton loginButton = new JButton("Login");
 
@@ -104,20 +115,22 @@ public class user extends JFrame implements ActionListener {
 
         setVisible(true);
     }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource().equals(loginButton)) {
-            HashMap<String, String> loginDetails = new HashMap<>();
-            loginDetails.put("vishnu", "vishnu@123");
-            loginDetails.put("", "");
-            if (loginDetails.get(usernameTextField.getText()) != null && loginDetails.get(usernameTextField.getText()).equalsIgnoreCase(passwordField.getText())) {
+            delegate delegate = new delegate();
+            PasswordEncryption passwordEncryption = new PasswordEncryption();
+            String encryptedPassword = (String) delegate.restCallToServer("/login",usernameTextField.getText());
+            String clientEncryptedPassword = passwordEncryption.encrypt(passwordField.getText(),"Salt");
+            if (encryptedPassword.equalsIgnoreCase(clientEncryptedPassword)) {
                 try {
                     loginSuccessful();
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
                 }
             }else{
-                JOptionPane.showMessageDialog(this, "Login failed.");
+                JOptionPane.showMessageDialog(this, "Inavlid user name or password.");
             }
         }else if(e.getSource().equals(orderButton)){
             remove(mainPanel);
