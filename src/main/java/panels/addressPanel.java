@@ -30,8 +30,6 @@ public class addressPanel extends JFrame implements ActionListener {
     delegate delegate = new delegate();
     String userName;
 
-
-
     public addressPanel(int price,String userId) {
         this.userName = userId;
         HashMap<String, String> addressMap = (HashMap<String, String>) delegate.restCallToServer("/address",userName);
@@ -44,7 +42,12 @@ public class addressPanel extends JFrame implements ActionListener {
         setIconImage(customerDetails.getLogo());
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+        // Set the background color to blue and red
+        getContentPane().setBackground(new Color(0, 0, 255));
+
+
         JPanel panel = new JPanel(new GridLayout(6, 2));
+        panel.setBackground(new Color(255, 0, 0));
         if(addressMap.containsKey("Name")) {
             nameLabel = new JLabel("Name:");
             nameTextField = new JTextField(addressMap.get("Name"));
@@ -80,7 +83,7 @@ public class addressPanel extends JFrame implements ActionListener {
 
     private void saveAddress() {
         delegates.delegate delegate = new delegate();
-     //   delegate.restCallToServer("/test",userName);
+        //   delegate.restCallToServer("/test",userName);
 
         // Do something with the address data, such as save it to a database or use it to calculate shipping costs.
 

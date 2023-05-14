@@ -18,9 +18,12 @@ public class PaymentOptionsPanel extends JFrame implements ActionListener {
     private JButton ok = new JButton("ok");
 
     String userId = "";
+    String paymentMethod = "";
+    int price ;
 
     public void PaymentOptions(int price,String userId){
         this.userId = userId;
+        this.price = price;
         customerDetails customerDetails = new customerDetails();
         setTitle(customerDetails.getCustomerName());
         setSize(400, 300);
@@ -79,12 +82,10 @@ public class PaymentOptionsPanel extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if(e.getSource().equals(ok)){
-            Random random = new Random();
-            int randomNumber = random.nextInt(1000);
-            JOptionPane.showMessageDialog(this, "Your token number is : "+ randomNumber);
-            setVisible(false);
-            new thankYou(userId);
+        if(e.getSource().equals(ok)) {
+
+            paymentMethod = getSelectedOption();
+            new PaymentProcessorPanel(paymentMethod, price, userId);
         }
     }
 }

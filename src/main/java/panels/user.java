@@ -2,19 +2,16 @@ package panels;
 
 import Encryption.PasswordEncryption;
 import Images.customerDetails;
-import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import delegates.FeignDelegate;
 import delegates.delegate;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.util.HashMap;
 
 @Getter
 public class user extends JFrame implements ActionListener {
@@ -77,16 +74,36 @@ public class user extends JFrame implements ActionListener {
     public void login(){
         customerDetails customerDetails = new customerDetails();
         setTitle(customerDetails.getCustomerName());
-        setSize(400, 300);
+        setSize(500, 300);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setIconImage(customerDetails.getLogo());
 
         login.setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
+
         gbc.insets = new Insets(5, 5, 5, 5);
 
         usernameTextField = new JTextField(20);
         passwordField = new JPasswordField(20);
+
+
+
+// Create show/hide password toggle button
+        JToggleButton showPasswordButton = new JToggleButton(customerDetails.getEyeIcon());
+        showPasswordButton.setPreferredSize(new Dimension(15,15));
+
+// Add action listener to toggle button
+        showPasswordButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Toggle the password field's echo character between '*' and null
+                if (showPasswordButton.isSelected()) {
+                    passwordField.setEchoChar('\u0000');
+                } else {
+                    passwordField.setEchoChar('*');
+                }
+            }
+        });
 
         loginButton.addActionListener(this);
 
@@ -102,15 +119,21 @@ public class user extends JFrame implements ActionListener {
         gbc.gridx = 1;
         gbc.gridy = 1;
         login.add(passwordField, gbc);
+        gbc.gridx = 2;
+        gbc.gridy = 1;
+        login.add(showPasswordButton,gbc);
         gbc.gridx = 1;
         gbc.gridy = 2;
+        loginButton.setFont(new Font("Arial", Font.BOLD, 14));
+        loginButton.setForeground(Color.WHITE);
+        loginButton.setBackground(Color.decode("#4CAF50"));
+        loginButton.setPreferredSize(new Dimension(120, 30));
         login.add(loginButton, gbc);
 
         register.addActionListener(this);
         gbc.gridx = 1;
         gbc.gridy = 5;
         login.add(register, gbc);
-
         add(login);
 
         setVisible(true);
@@ -192,28 +215,30 @@ public class user extends JFrame implements ActionListener {
         sizeButtonGroup.add(mediumRadioButton);
         sizeButtonGroup.add(largeRadioButton);
 
-
-
         orderButton.addActionListener(this);
 
         // Add components to the UI
         JPanel toppingsPanel = new JPanel();
+        toppingsPanel.setBorder(BorderFactory.createTitledBorder("Choose your toppings"));
         toppingsPanel.add(toppingsLabel);
         toppingsPanel.add(pepperoniCheckBox);
         toppingsPanel.add(mushroomCheckBox);
         toppingsPanel.add(onionCheckBox);
 
         JPanel sizePanel = new JPanel();
+        sizePanel.setBorder(BorderFactory.createTitledBorder("Choose your size"));
         sizePanel.add(sizeLabel);
         sizePanel.add(smallRadioButton);
         sizePanel.add(mediumRadioButton);
         sizePanel.add(largeRadioButton);
 
         JPanel quantityPanel = new JPanel();
+        quantityPanel.setBorder(BorderFactory.createTitledBorder("Enter quantity"));
         quantityPanel.add(quantityLabel);
         quantityPanel.add(quantityTextField);
 
         JPanel buttonPanel = new JPanel();
+        buttonPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
         buttonPanel.add(orderButton);
 
         mainPanel.setLayout(new GridBagLayout());
@@ -235,6 +260,8 @@ public class user extends JFrame implements ActionListener {
         JPanel profile = new JPanel();
 
         JLabel username = new JLabel("Welcome " + usernameTextField.getText());
+        username.setFont(new Font("Arial", Font.BOLD, 18));
+        username.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
         gbc.gridx = 0;
         gbc.gridy = 0;
         mainPanel.add(username,gbc);
