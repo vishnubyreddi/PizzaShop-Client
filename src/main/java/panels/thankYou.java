@@ -38,7 +38,7 @@ public class thankYou extends JFrame {
         Timer timer = new Timer(3000, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new user();
+              //  new user();
                 dispose();
             }
         });

@@ -8,9 +8,25 @@ import java.awt.*;
 @Setter
 @Getter
 public class customerDetails {
-    Image logo = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/images/dominos.png"));
+    Image logo ;
+    ImageIcon eyeIcon ;
 
-    ImageIcon eyeIcon = new ImageIcon(getClass().getResource("/images/eye.png"));
+    private String customerName;
 
-    private String customerName = "DOMINO'S";
+    public customerDetails(String restarantName) {
+
+        if (restarantName.equalsIgnoreCase("Domino's")) {
+            this.logo = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/images/dominos.png"));
+            this.customerName = "DOMINO'S";
+        } else {
+           this.logo = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/images/kfc.jpg"));
+            this.customerName = "KFC";
+        }
+        eyeIcon = new ImageIcon(getClass().getResource("/images/eye.png"));
+    }
+
+
+    public customerDetails() {
+
+    }
 }

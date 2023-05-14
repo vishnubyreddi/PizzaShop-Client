@@ -57,7 +57,7 @@ public class PaymentProcessorPanel extends JFrame implements ActionListener {
                 JOptionPane.showMessageDialog(this, "Payment successful. Thank you for your purchase!");
                 setVisible(false);
                 Random random = new Random();
-                int randomNumber = random.nextInt(1000);
+                int randomNumber = random.nextInt(10000);
                 JOptionPane.showMessageDialog(this, "Your token number is : "+ randomNumber);
                 setVisible(false);
                 new thankYou(userName);

@@ -6,7 +6,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Random;
 
 public class PaymentOptionsPanel extends JFrame implements ActionListener {
     private JPanel paymentPanel = new JPanel();
@@ -21,10 +20,10 @@ public class PaymentOptionsPanel extends JFrame implements ActionListener {
     String paymentMethod = "";
     int price ;
 
-    public void PaymentOptions(int price,String userId){
+    public void PaymentOptions(String restaurantName, int price,String userId){
         this.userId = userId;
         this.price = price;
-        customerDetails customerDetails = new customerDetails();
+        customerDetails customerDetails = new customerDetails(restaurantName);
         setTitle(customerDetails.getCustomerName());
         setSize(400, 300);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

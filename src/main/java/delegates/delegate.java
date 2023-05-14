@@ -4,6 +4,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class delegate {
@@ -17,11 +18,17 @@ public class delegate {
         String requestBody = userName;
         HttpEntity<String> request = new HttpEntity<String>(requestBody,headers);
         if(urlMap.equalsIgnoreCase("/login")) {
-             String user = restTemplate.postForObject(baseUrl + urlMap,requestBody, String.class);
+             HashMap<String,String> user = restTemplate.postForObject(baseUrl + urlMap,requestBody, HashMap.class);
             return user;
         }else{
             HashMap<String, String> user = restTemplate.postForObject(baseUrl + urlMap, request,HashMap.class);
             return user;
         }
+    }
+
+    public HashMap<String, ArrayList<String>> getFoodItems(String restaurentName) {
+        HttpEntity<String> request = new HttpEntity<String>(restaurentName,headers);
+        HashMap<String, ArrayList<String>>  user = restTemplate.postForObject(baseUrl + "/foodItems",request, HashMap.class);
+        return user;
     }
 }

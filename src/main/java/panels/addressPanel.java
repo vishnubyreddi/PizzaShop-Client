@@ -29,11 +29,13 @@ public class addressPanel extends JFrame implements ActionListener {
 
     delegate delegate = new delegate();
     String userName;
+    String restaurantName;
 
-    public addressPanel(int price,String userId) {
+    public addressPanel(String restaurantName, int price,String userId) {
         this.userName = userId;
+        this.restaurantName = restaurantName;
         HashMap<String, String> addressMap = (HashMap<String, String>) delegate.restCallToServer("/address",userName);
-        customerDetails customerDetails = new customerDetails();
+        customerDetails customerDetails = new customerDetails(restaurantName);
         this.price = price;
         this.userId = userId;
         setTitle(customerDetails.getCustomerName());
@@ -47,7 +49,6 @@ public class addressPanel extends JFrame implements ActionListener {
 
 
         JPanel panel = new JPanel(new GridLayout(6, 2));
-        panel.setBackground(new Color(255, 0, 0));
         if(addressMap.containsKey("Name")) {
             nameLabel = new JLabel("Name:");
             nameTextField = new JTextField(addressMap.get("Name"));
@@ -96,7 +97,7 @@ public class addressPanel extends JFrame implements ActionListener {
             saveAddress();
             setVisible(false);
             PaymentOptionsPanel paymentOptionsPanel = new PaymentOptionsPanel();
-            paymentOptionsPanel.PaymentOptions(price,userId);
+            paymentOptionsPanel.PaymentOptions(restaurantName,price,userId);
         }
     }
 }

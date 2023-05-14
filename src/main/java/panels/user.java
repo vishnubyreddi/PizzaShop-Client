@@ -12,6 +12,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 @Getter
 public class user extends JFrame implements ActionListener {
@@ -21,9 +23,6 @@ public class user extends JFrame implements ActionListener {
 
     JPanel login = new JPanel();
 
-    public static void main(String[] args) {
-        new user();
-    }
 
     // Create UI components
     JLabel usernameLabel = new JLabel("Username:");
@@ -40,12 +39,12 @@ public class user extends JFrame implements ActionListener {
 
     JButton register = new JButton("new User");
 
-    JLabel email= new JLabel("Email");
-    JTextField emailTextField= new JTextField(20);
+    JLabel email = new JLabel("Email");
+    JTextField emailTextField = new JTextField(20);
     JLabel password = new JLabel("Password");
-    JPasswordField  registerPasswordField = new JPasswordField(20);
+    JPasswordField registerPasswordField = new JPasswordField(20);
     JLabel passwordConform = new JLabel("Conform Password");
-    JPasswordField  ConformPasswordField = new JPasswordField(20);
+    JPasswordField ConformPasswordField = new JPasswordField(20);
     JButton registerButton = new JButton("Register");
 
     JButton backFromRegister = new JButton("back");
@@ -65,14 +64,17 @@ public class user extends JFrame implements ActionListener {
     JLabel quantityLabel = new JLabel("Quantity:");
     JTextField quantityTextField = new JTextField("1", 5);
 
-    String[] deliveryOptions = {"DINE IN","DELIVERY"};
+    String[] deliveryOptions = {"DINE IN", "DELIVERY"};
     JComboBox<String> typeOfDelivery = new JComboBox<>(deliveryOptions);
-    public user() {
+    String restaurentName = "";
+
+    public user(String restaurentName) {
+        this.restaurentName = restaurentName;
         login();
     }
 
-    public void login(){
-        customerDetails customerDetails = new customerDetails();
+    public void login() {
+        customerDetails customerDetails = new customerDetails(restaurentName);
         setTitle(customerDetails.getCustomerName());
         setSize(500, 300);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -83,14 +85,14 @@ public class user extends JFrame implements ActionListener {
 
         gbc.insets = new Insets(5, 5, 5, 5);
 
+
         usernameTextField = new JTextField(20);
         passwordField = new JPasswordField(20);
 
 
-
 // Create show/hide password toggle button
         JToggleButton showPasswordButton = new JToggleButton(customerDetails.getEyeIcon());
-        showPasswordButton.setPreferredSize(new Dimension(15,15));
+        showPasswordButton.setPreferredSize(new Dimension(15, 15));
 
 // Add action listener to toggle button
         showPasswordButton.addActionListener(new ActionListener() {
@@ -121,7 +123,7 @@ public class user extends JFrame implements ActionListener {
         login.add(passwordField, gbc);
         gbc.gridx = 2;
         gbc.gridy = 1;
-        login.add(showPasswordButton,gbc);
+        login.add(showPasswordButton, gbc);
         gbc.gridx = 1;
         gbc.gridy = 2;
         loginButton.setFont(new Font("Arial", Font.BOLD, 14));
@@ -144,9 +146,10 @@ public class user extends JFrame implements ActionListener {
         if (e.getSource().equals(loginButton)) {
             delegate delegate = new delegate();
             PasswordEncryption passwordEncryption = new PasswordEncryption();
-            String encryptedPassword = (String) delegate.restCallToServer("/login",usernameTextField.getText());
-            String clientEncryptedPassword = passwordEncryption.encrypt(passwordField.getText(),"Salt");
-            if (encryptedPassword.equalsIgnoreCase(clientEncryptedPassword)) {
+            HashMap<String,String> userAuth = (HashMap<String, String>) delegate.restCallToServer("/login",usernameTextField.getText());
+            String clientEncryptedPassword = passwordEncryption.encrypt(passwordField.getText(),userAuth.get("salt"));
+            if (userAuth.get("encryptedPassword").equalsIgnoreCase(clientEncryptedPassword)) {
+
                 try {
                     loginSuccessful();
                 } catch (IOException ex) {
@@ -155,39 +158,39 @@ public class user extends JFrame implements ActionListener {
             }else{
                 JOptionPane.showMessageDialog(this, "Inavlid user name or password.");
             }
-        }else if(e.getSource().equals(orderButton)){
+        } else if (e.getSource().equals(orderButton)) {
             remove(mainPanel);
             setTitle("Payment");
 
             paymentPanel.setLayout(new GridBagLayout());
             GridBagConstraints gbc = new GridBagConstraints();
             gbc.insets = new Insets(5, 5, 5, 5);
-            int price =100;
-            if(mushroomCheckBox.isSelected()){
+            int price = 100;
+            if (mushroomCheckBox.isSelected()) {
                 price = price + 50;
             }
-            if(onionCheckBox.isSelected()){
+            if (onionCheckBox.isSelected()) {
                 price = price + 30;
             }
-            if(pepperoniCheckBox.isSelected()){
+            if (pepperoniCheckBox.isSelected()) {
                 price = price + 60;
             }
-            if(mediumRadioButton.isSelected()){
-                price = price+50;
+            if (mediumRadioButton.isSelected()) {
+                price = price + 50;
             } else if (largeRadioButton.isSelected()) {
-                price = price +70;
+                price = price + 70;
             }
             int quant = Integer.parseInt(quantityTextField.getText());
             price = price * quant;
             setVisible(false);
-            new addressPanel(price,usernameTextField.getText());
+            new addressPanel(restaurentName,price, usernameTextField.getText());
 
         } else if (e.getSource().equals(register)) {
             newUser();
         } else if (e.getSource().equals(registerButton)) {
-            if(registerPasswordField.getText().equalsIgnoreCase(ConformPasswordField.getText())){
+            if (registerPasswordField.getText().equalsIgnoreCase(ConformPasswordField.getText())) {
 
-            }else{
+            } else {
 
             }
         } else if (e.getSource().equals(backFromRegister)) {
@@ -199,38 +202,31 @@ public class user extends JFrame implements ActionListener {
 
     public void loginSuccessful() throws IOException {
         remove(login);
-        setTitle("Pizza Order Form");
-        // Create UI components
-        JLabel toppingsLabel = new JLabel("Toppings:");
-        JCheckBox pepperoniCheckBox = new JCheckBox("Pepperoni");
-        JCheckBox mushroomCheckBox = new JCheckBox("Mushroom");
-        JCheckBox onionCheckBox = new JCheckBox("Onion");
-
-        JLabel sizeLabel = new JLabel("Size:");
-        JRadioButton smallRadioButton = new JRadioButton("Small");
-        JRadioButton mediumRadioButton = new JRadioButton("Medium");
-        JRadioButton largeRadioButton = new JRadioButton("Large");
-        ButtonGroup sizeButtonGroup = new ButtonGroup();
-        sizeButtonGroup.add(smallRadioButton);
-        sizeButtonGroup.add(mediumRadioButton);
-        sizeButtonGroup.add(largeRadioButton);
+        mainPanel.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(5, 5, 5, 5);
+        delegate delegate = new delegate();
+        HashMap<String, ArrayList<String>> foodItems = delegate.getFoodItems(restaurentName);
+        int panelsIterator = 1;
+        setTitle(restaurentName);
+        for (String panel :
+                foodItems.keySet()) {
+            JPanel customPanel = new JPanel();
+            JLabel customLabel = new JLabel();
+            customLabel.setText(panel + " : ");
+            customPanel.add(customLabel);
+            for (int i = 0; i < foodItems.get(panel).size(); i++) {
+                JCheckBox itemCheckBox = new JCheckBox(foodItems.get(panel).get(i));
+                customPanel.add(itemCheckBox);
+            }
+            gbc.gridx = 0;
+            gbc.gridy = panelsIterator;
+            mainPanel.add(customPanel, gbc);
+            panelsIterator++;
+        }
 
         orderButton.addActionListener(this);
 
-        // Add components to the UI
-        JPanel toppingsPanel = new JPanel();
-        toppingsPanel.setBorder(BorderFactory.createTitledBorder("Choose your toppings"));
-        toppingsPanel.add(toppingsLabel);
-        toppingsPanel.add(pepperoniCheckBox);
-        toppingsPanel.add(mushroomCheckBox);
-        toppingsPanel.add(onionCheckBox);
-
-        JPanel sizePanel = new JPanel();
-        sizePanel.setBorder(BorderFactory.createTitledBorder("Choose your size"));
-        sizePanel.add(sizeLabel);
-        sizePanel.add(smallRadioButton);
-        sizePanel.add(mediumRadioButton);
-        sizePanel.add(largeRadioButton);
 
         JPanel quantityPanel = new JPanel();
         quantityPanel.setBorder(BorderFactory.createTitledBorder("Enter quantity"));
@@ -241,20 +237,13 @@ public class user extends JFrame implements ActionListener {
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
         buttonPanel.add(orderButton);
 
-        mainPanel.setLayout(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(5, 5, 5, 5);
+
         gbc.gridx = 0;
-        gbc.gridy = 1;
-        mainPanel.add(toppingsPanel, gbc);
-        gbc.gridx = 0;
-        gbc.gridy = 2;
-        mainPanel.add(sizePanel, gbc);
-        gbc.gridx = 0;
-        gbc.gridy = 3;
+        gbc.gridy = panelsIterator;
         mainPanel.add(quantityPanel, gbc);
+        panelsIterator++;
         gbc.gridx = 0;
-        gbc.gridy = 4;
+        gbc.gridy = panelsIterator;
         mainPanel.add(buttonPanel, gbc);
 
         JPanel profile = new JPanel();
@@ -264,13 +253,19 @@ public class user extends JFrame implements ActionListener {
         username.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
         gbc.gridx = 0;
         gbc.gridy = 0;
-        mainPanel.add(username,gbc);
+        mainPanel.add(username, gbc);
+        ImageIcon profilePic =  new ImageIcon(getClass().getResource("/images/vishnu.jpg"));
+        JLabel profileLabel = new JLabel(profilePic);
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        profileLabel.setPreferredSize(new Dimension(20,20));
+        mainPanel.add(profileLabel,gbc);
         add(mainPanel);
 
         setVisible(true);
     }
 
-    public void newUser(){
+    public void newUser() {
         remove(login);
         registerButton.addActionListener(this);
         registerPanel.setLayout(new GridBagLayout());
@@ -278,35 +273,35 @@ public class user extends JFrame implements ActionListener {
         gbc.insets = new Insets(5, 5, 5, 5);
 
 
-        gbc.gridx=0;
-        gbc.gridy=0;
-        registerPanel.add(email,gbc);
-        gbc.gridx=1;
-        gbc.gridy=0;
-        registerPanel.add(emailTextField,gbc);
-        gbc.gridx=0;
-        gbc.gridy=1;
-        registerPanel.add(password,gbc);
-        gbc.gridx=1;
-        gbc.gridy=1;
-        registerPanel.add(registerPasswordField,gbc);
-        gbc.gridx=0;
-        gbc.gridy=2;
-        registerPanel.add(passwordConform,gbc);
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        registerPanel.add(email, gbc);
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        registerPanel.add(emailTextField, gbc);
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        registerPanel.add(password, gbc);
+        gbc.gridx = 1;
+        gbc.gridy = 1;
+        registerPanel.add(registerPasswordField, gbc);
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        registerPanel.add(passwordConform, gbc);
 
-        gbc.gridx=1;
-        gbc.gridy=2;
-        registerPanel.add(ConformPasswordField,gbc);
+        gbc.gridx = 1;
+        gbc.gridy = 2;
+        registerPanel.add(ConformPasswordField, gbc);
 
-        gbc.gridx=1;
-        gbc.gridy=3;
-        registerPanel.add(registerButton,gbc);
+        gbc.gridx = 1;
+        gbc.gridy = 3;
+        registerPanel.add(registerButton, gbc);
 
         backFromRegister.addActionListener(this);
 
-        gbc.gridx=1;
-        gbc.gridy=6;
-        registerPanel.add(backFromRegister,gbc);
+        gbc.gridx = 1;
+        gbc.gridy = 6;
+        registerPanel.add(backFromRegister, gbc);
 
         add(registerPanel);
         setVisible(true);
